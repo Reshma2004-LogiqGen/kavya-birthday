@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #fff8f3;
+  --color-ink-soft: rgba(255, 248, 243, 0.72);
+  --color-ink-mute: rgba(255, 248, 243, 0.45);
+  --color-paper: #1a1520;
+  --color-snow: #fff8f3;
+  --color-deep: #121018;
+  --color-rose: #e08a7a;
+  --color-sky: #9eb6c8;
+  --color-moss: #7fa090;
+  --color-gold: #d4b56a;
+  --color-line: rgba(255, 248, 243, 0.14);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(212, 181, 106, 0.35);
+  color: #fff8f3;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+@keyframes float-a {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(14px, -22px, 0);
+  }
+}
+
+@keyframes float-b {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-16px, 14px, 0);
+  }
+}
+
+@keyframes balloon {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(2deg);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes string-glow {
+  0%,
+  100% {
+    filter: brightness(0.85);
+  }
+  50% {
+    filter: brightness(1.25);
+  }
+}
