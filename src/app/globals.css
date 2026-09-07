@@ -1,26 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: var(--font-playfair), Georgia, serif;
-  --font-sans: var(--font-outfit), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink: #faf6ef;
-  --color-ink-soft: rgba(250, 246, 239, 0.74);
-  --color-ink-mute: rgba(250, 246, 239, 0.48);
-  --color-paper: #04060f;
-  --color-snow: #faf6ef;
-  --color-deep: #04060f;
-  --color-gold: #e8c47a;
-  --color-gold-bright: #f5d98a;
-  --color-rose: #e8a4b8;
-  --color-line: rgba(232, 196, 122, 0.24);
-  --color-card: rgba(12, 18, 36, 0.62);
+  --color-ink: #10151c;
+  --color-ink-soft: rgba(16, 21, 28, 0.68);
+  --color-ink-mute: rgba(16, 21, 28, 0.42);
+  --color-paper: #eef3f6;
+  --color-snow: #f8fbfc;
+  --color-deep: #10151c;
+  --color-teal: #3d7a78;
+  --color-amber: #c9894a;
+  --color-mist: #d5e0e6;
+  --color-line: rgba(16, 21, 28, 0.1);
 }
 
-html,
-body {
-  margin: 0;
-  min-height: 100%;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -28,112 +25,50 @@ body {
   color: var(--color-ink);
   background: var(--color-paper);
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(232, 196, 122, 0.3);
-  color: #faf6ef;
+  background: rgba(61, 122, 120, 0.22);
 }
 
 .font-display {
   font-family: var(--font-display);
 }
 
-@keyframes aurora-shift {
-  0% {
-    opacity: 0.7;
-    transform: scale(1) translateY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1.05) translateY(-12px);
-  }
-}
-
-@keyframes drift {
-  0%,
-  100% {
+@keyframes mesh-a {
+  from {
     transform: translate(0, 0) scale(1);
   }
-  50% {
-    transform: translate(20px, -24px) scale(1.06);
+  to {
+    transform: translate(40px, -30px) scale(1.08);
   }
 }
 
-@keyframes float-balloon {
-  0%,
-  100% {
-    transform: translateY(0) rotate(-2deg);
+@keyframes mesh-b {
+  from {
+    transform: translate(0, 0) scale(1);
   }
-  50% {
-    transform: translateY(-18px) rotate(2deg);
+  to {
+    transform: translate(-30px, 25px) scale(1.06);
   }
 }
 
-@keyframes flicker {
-  0%,
-  100% {
-    transform: scale(1) rotate(-2deg);
-    opacity: 0.9;
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
   }
-  50% {
-    transform: scale(1.15) rotate(2deg);
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rise-soft {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
     opacity: 1;
+    transform: translateY(0);
   }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
-}
-
-@keyframes soft-pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    transform: scale(1.04);
-  }
-}
-
-.shimmer-text {
-  background: linear-gradient(
-    90deg,
-    #faf6ef 0%,
-    #e8c47a 35%,
-    #faf6ef 50%,
-    #e8a4b8 75%,
-    #faf6ef 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer 6s linear infinite;
-}
-
-.btn-shine {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.18) 50%,
-    transparent 70%
-  );
-  transform: translateX(-120%);
-  transition: transform 0.7s ease;
-}
-
-button:hover .btn-shine,
-a:hover .btn-shine {
-  transform: translateX(120%);
 }

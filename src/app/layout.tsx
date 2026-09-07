@@ -1,24 +1,23 @@
 import type { Metadata } from "next";
-import { Outfit, Playfair_Display } from "next/font/google";
+import { Fraunces, Syne } from "next/font/google";
 import "./globals.css";
 
-const display = Playfair_Display({
+const display = Fraunces({
   subsets: ["latin"],
-  variable: "--font-playfair",
-  weight: ["500", "600", "700"],
+  variable: "--font-fraunces",
   style: ["normal", "italic"],
 });
 
-const sans = Outfit({
+const sans = Syne({
   subsets: ["latin"],
-  variable: "--font-outfit",
-  weight: ["300", "400", "500", "600"],
+  variable: "--font-syne",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Happy Birthday, Kavya Reddy | Logiqgen Dev Team",
+  title: "Happy Birthday, Kavya Reddy | Logiqgen",
   description:
-    "Happy Birthday Kavya Reddy — warm wishes from your Logiqgen Dev Team.",
+    "A premium birthday dedication for Kavya Reddy — teammate, developer, observer, and one of the finest humans at Logiqgen.",
 };
 
 export default function RootLayout({
