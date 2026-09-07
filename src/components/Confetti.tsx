@@ -16,7 +16,7 @@ type Particle = {
   vr: number;
 };
 
-const COLORS = ["#c97b6f", "#b8955a", "#8fa3b5", "#14131a", "#fffcf8", "#d4b896"];
+const COLORS = ["#e8c47a", "#e8a4b8", "#faf6ef", "#9bb7e8", "#f5d98a", "#d4a5a5"];
 
 export function useConfetti() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -28,7 +28,7 @@ export function useConfetti() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
     canvas.style.width = `${window.innerWidth}px`;
@@ -52,7 +52,6 @@ export function useConfetti() {
       p.vx *= 0.985;
       p.rot += p.vr;
       p.life -= 1;
-
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rot);
@@ -71,19 +70,18 @@ export function useConfetti() {
   }, []);
 
   const burst = useCallback(
-    (count = 110) => {
+    (count = 120) => {
       const ox = window.innerWidth / 2;
-      const oy = window.innerHeight * 0.35;
-
+      const oy = window.innerHeight * 0.38;
       for (let i = 0; i < count; i++) {
         const ang = Math.random() * Math.PI * 2;
-        const spd = 2.8 + Math.random() * 11;
+        const spd = 2.6 + Math.random() * 11;
         partsRef.current.push({
           x: ox,
           y: oy,
           vx: Math.cos(ang) * spd,
-          vy: Math.sin(ang) * spd - 3.2,
-          g: 0.12 + Math.random() * 0.1,
+          vy: Math.sin(ang) * spd - 3,
+          g: 0.11 + Math.random() * 0.1,
           w: 3 + Math.random() * 7,
           h: 2 + Math.random() * 4,
           color: COLORS[(Math.random() * COLORS.length) | 0],
@@ -92,7 +90,6 @@ export function useConfetti() {
           vr: (Math.random() - 0.5) * 0.25,
         });
       }
-
       if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
     },
     [tick],
@@ -118,7 +115,7 @@ export function ConfettiCanvas({
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed inset-0 z-[60]"
+      className="pointer-events-none fixed inset-0 z-[5]"
       aria-hidden
     />
   );

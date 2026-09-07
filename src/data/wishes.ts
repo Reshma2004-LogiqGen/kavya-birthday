@@ -3,6 +3,7 @@ export type Wish = {
   index: string;
   label: string;
   body: string;
+  featured?: boolean;
 };
 
 export const wishes: Wish[] = [
@@ -35,5 +36,6 @@ export const wishes: Wish[] = [
     index: "05",
     label: "From the Logiqgen team",
     body: "You're one of the easiest people to work with and one of the hardest to replace — thoughtful, dependable, and genuinely kind. We're glad you're on our team. Keep shining, Kavya.",
+    featured: true,
   },
 ];

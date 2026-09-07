@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Manrope } from "next/font/google";
+import { Outfit, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-const display = Instrument_Serif({
-  weight: "400",
+const display = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-instrument",
+  variable: "--font-playfair",
+  weight: ["500", "600", "700"],
   style: ["normal", "italic"],
 });
 
-const sans = Manrope({
+const sans = Outfit({
   subsets: ["latin"],
-  variable: "--font-manrope",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-outfit",
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
   title: "Happy Birthday, Kavya Reddy | Logiqgen Dev Team",
   description:
-    "Birthday wishes for Kavya Reddy from the Logiqgen Dev Team — teammate, developer, observer, and one of the best humans we know.",
+    "Happy Birthday Kavya Reddy — warm wishes from your Logiqgen Dev Team.",
 };
 
 export default function RootLayout({

@@ -7,266 +7,296 @@ import { ConfettiCanvas, useConfetti } from "@/components/Confetti";
 import { wishes } from "@/data/wishes";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+const STEPS = ["intro", "reveal", "wishes", "finale"] as const;
+type Step = (typeof STEPS)[number];
+
+function Cake() {
+  return (
+    <div className="relative mx-auto mt-8 h-36 w-40" aria-hidden>
+      <div className="absolute bottom-2 left-1/2 h-3 w-36 -translate-x-1/2 rounded-full bg-gold/20 blur-[2px]" />
+      <div className="absolute bottom-4 left-1/2 h-10 w-32 -translate-x-1/2 rounded-md bg-gradient-to-b from-[#f3d9a4] to-[#c9a060]" />
+      <div className="absolute bottom-12 left-1/2 h-9 w-24 -translate-x-1/2 rounded-md bg-gradient-to-b from-[#e8a4b8] to-[#b87088]" />
+      <div className="absolute bottom-[4.75rem] left-1/2 h-8 w-16 -translate-x-1/2 rounded-md bg-gradient-to-b from-[#faf6ef] to-[#e8c47a]" />
+      <div className="absolute bottom-[7.1rem] left-1/2 h-7 w-1.5 -translate-x-1/2 rounded-sm bg-[#f5d98a]" />
+      <div
+        className="absolute bottom-[8.6rem] left-1/2 h-4 w-3 -translate-x-1/2 rounded-full"
+        style={{
+          background: "radial-gradient(circle at 40% 30%, #fff6c8, #ff9a3c 55%, #ff5a1f)",
+          animation: "flicker 1.2s ease-in-out infinite",
+        }}
+      />
+    </div>
+  );
+}
 
 export function BirthdayExperience() {
-  const [opened, setOpened] = useState(false);
+  const [step, setStep] = useState<Step>("intro");
   const { canvasRef, burst } = useConfetti();
+  const stepIndex = STEPS.indexOf(step);
 
   useEffect(() => {
-    if (!opened) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
-    const t = window.setTimeout(() => burst(90), 400);
-    return () => window.clearTimeout(t);
-  }, [opened, burst]);
+    if (step === "reveal" || step === "finale") {
+      const t = window.setTimeout(() => burst(step === "finale" ? 180 : 100), 350);
+      return () => window.clearTimeout(t);
+    }
+  }, [step, burst]);
 
-  const openWish = () => {
-    setOpened(true);
-    burst(140);
-  };
-
-  const celebrate = () => {
-    burst(200);
-    document.getElementById("wishes")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const replay = () => {
-    setOpened(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const go = (next: Step) => setStep(next);
 
   return (
     <>
       <Atmosphere />
       <ConfettiCanvas canvasRef={canvasRef} />
 
-      <AnimatePresence mode="wait">
-        {!opened ? (
-          <motion.section
-            key="gate"
-            className="relative flex min-h-[100dvh] flex-col items-center justify-center px-6 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.98, filter: "blur(8px)" }}
-            transition={{ duration: 0.55, ease }}
-          >
-            <p className="mb-8 text-[0.68rem] font-medium uppercase tracking-[0.28em] text-ink-mute">
-              Logiqgen · Dev Team
-            </p>
-
-            <motion.span
-              className="mb-8 text-gold"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.15, duration: 0.7 }}
-              aria-hidden
-            >
-              ✦
-            </motion.span>
-
-            <h1 className="max-w-xl font-display text-[clamp(2.8rem,8vw,4.8rem)] leading-[1.05] tracking-[-0.03em] text-ink">
-              A wish is waiting
-              <br />
-              <span className="italic text-rose">for you</span>
-            </h1>
-
-            <p className="mt-6 max-w-md text-base font-light leading-relaxed text-ink-soft sm:text-lg">
-              Your Logiqgen dev team put this together — because today is all
-              about you, Kavya Reddy.
-            </p>
-
+      {/* Progress */}
+      <nav
+        className="fixed left-1/2 top-5 z-20 flex -translate-x-1/2 items-center gap-0 sm:top-7"
+        aria-label="Celebration progress"
+      >
+        {STEPS.map((s, i) => (
+          <div key={s} className="flex items-center">
             <button
               type="button"
-              onClick={openWish}
-              className="mt-10 bg-deep px-9 py-4 text-[0.78rem] font-medium uppercase tracking-[0.18em] text-snow transition hover:-translate-y-0.5 hover:bg-[#2a2733]"
+              aria-label={`Step ${i + 1}`}
+              onClick={() => {
+                if (i <= stepIndex) go(s);
+              }}
+              className={`h-2.5 w-2.5 rounded-full border transition ${
+                i === stepIndex
+                  ? "scale-125 border-gold bg-gold"
+                  : i < stepIndex
+                    ? "border-gold/70 bg-gold/50"
+                    : "border-gold/30 bg-transparent"
+              }`}
+            />
+            {i < STEPS.length - 1 && (
+              <span
+                className={`mx-1.5 h-px w-6 sm:w-9 ${
+                  i < stepIndex ? "bg-gold/60" : "bg-gold/20"
+                }`}
+              />
+            )}
+          </div>
+        ))}
+      </nav>
+
+      <main className="relative z-10 flex min-h-[100dvh] items-center justify-center px-5 py-20 sm:px-8">
+        <AnimatePresence mode="wait">
+          {step === "intro" && (
+            <motion.section
+              key="intro"
+              className="mx-auto w-full max-w-xl text-center"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12, filter: "blur(6px)" }}
+              transition={{ duration: 0.55, ease }}
             >
-              Open your wish
-            </button>
-          </motion.section>
-        ) : (
-          <motion.div
-            key="wish"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease }}
-          >
-            <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 py-5 sm:px-10 lg:px-14">
-              <p className="text-[0.68rem] font-medium uppercase tracking-[0.22em] text-ink-mute">
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-line bg-card px-4 py-1.5 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-ink-mute">
+                <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                 Logiqgen · Dev Team
+              </div>
+
+              <p className="mb-6 text-2xl text-gold" aria-hidden>
+                ✦
               </p>
+
+              <h1 className="font-display shimmer-text text-[clamp(2.7rem,8vw,4.6rem)] font-medium leading-[1.08] tracking-[-0.02em]">
+                A wish is waiting
+                <br />
+                <span className="italic text-rose">for you</span>
+              </h1>
+
+              <p className="mx-auto mt-6 max-w-md text-base font-light leading-relaxed text-ink-soft sm:text-lg">
+                Your Logiqgen dev team put this together — because today is all
+                about you, Kavya Reddy.
+              </p>
+
               <button
                 type="button"
-                onClick={celebrate}
-                className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-ink-mute transition hover:text-rose"
+                onClick={() => {
+                  burst(80);
+                  go("reveal");
+                }}
+                className="relative mt-10 overflow-hidden rounded-full bg-gradient-to-r from-gold to-gold-bright px-9 py-3.5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-deep shadow-[0_10px_40px_rgba(232,196,122,0.25)] transition hover:-translate-y-0.5"
               >
-                Celebrate
+                <span className="relative z-10">Open your wish</span>
+                <span className="btn-shine" aria-hidden />
               </button>
-            </header>
+            </motion.section>
+          )}
 
-            <main>
-              <section className="relative flex min-h-[100dvh] flex-col items-center justify-center px-6 pb-16 pt-28 text-center sm:px-10">
-                <motion.p
-                  className="mb-5 text-[0.7rem] font-medium uppercase tracking-[0.34em] text-rose"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, ease }}
-                >
-                  Happy Birthday
-                </motion.p>
+          {step === "reveal" && (
+            <motion.section
+              key="reveal"
+              className="mx-auto w-full max-w-2xl text-center"
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12, filter: "blur(6px)" }}
+              transition={{ duration: 0.55, ease }}
+            >
+              <p className="mb-5 text-[0.72rem] font-medium uppercase tracking-[0.34em] text-rose">
+                Happy Birthday
+              </p>
 
-                <motion.h1
-                  className="font-display text-[clamp(3.8rem,14vw,9rem)] leading-[0.9] tracking-[-0.035em] text-ink"
-                  initial={{ opacity: 0, y: 36 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.95, delay: 0.08, ease }}
-                >
+              <div className="relative mx-auto inline-block">
+                <div
+                  className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl sm:h-64 sm:w-64"
+                  style={{
+                    background: "rgba(232,196,122,0.2)",
+                    animation: "soft-pulse 4s ease-in-out infinite",
+                  }}
+                  aria-hidden
+                />
+                <h1 className="relative font-display text-[clamp(3.6rem,13vw,7.5rem)] font-semibold leading-[0.92] tracking-[-0.03em] text-ink">
                   Kavya
                   <br />
-                  <span className="italic text-ink-soft">Reddy</span>
-                </motion.h1>
+                  <span className="italic text-gold">Reddy</span>
+                </h1>
+              </div>
 
-                <motion.p
-                  className="mt-5 text-base font-light text-ink-soft sm:text-lg"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.25, ease }}
-                >
-                  teammate · developer · keenest observer · best human
-                </motion.p>
+              <p className="mt-5 text-base font-light text-ink-soft sm:text-lg">
+                teammate · developer · keenest observer · best human
+              </p>
 
-                <motion.a
-                  href="#wishes"
-                  className="mt-10 border border-line px-8 py-3.5 text-[0.76rem] font-medium uppercase tracking-[0.16em] text-ink transition hover:border-rose/45 hover:text-rose"
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.75, delay: 0.38, ease }}
-                >
-                  See your wishes
-                </motion.a>
-              </section>
+              <Cake />
 
-              <section id="wishes" className="px-6 py-20 sm:px-10 sm:py-28 lg:px-14">
-                <div className="mx-auto max-w-3xl">
-                  <motion.div
-                    className="mb-14 text-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.8, ease }}
-                  >
-                    <p className="mb-3 text-[0.66rem] font-medium uppercase tracking-[0.28em] text-ink-mute">
-                      Logiqgen · Dev Team
-                    </p>
-                    <h2 className="font-display text-[clamp(2.2rem,5.5vw,3.4rem)] leading-[1.05] tracking-[-0.02em] text-ink">
-                      Wishes from your
-                      <span className="italic text-rose"> dev team</span>
-                    </h2>
-                    <p className="mt-4 text-base font-light text-ink-soft">
-                      From the people you work with every day.
-                    </p>
-                  </motion.div>
+              <button
+                type="button"
+                onClick={() => go("wishes")}
+                className="relative mt-10 overflow-hidden rounded-full border border-line px-8 py-3.5 text-[0.76rem] font-medium uppercase tracking-[0.16em] text-ink transition hover:border-gold/50 hover:text-gold"
+              >
+                <span className="relative z-10">See your wishes</span>
+                <span className="btn-shine" aria-hidden />
+              </button>
+            </motion.section>
+          )}
 
-                  <div>
-                    {wishes.map((wish, i) => (
-                      <motion.article
-                        key={wish.id}
-                        className="border-t border-line py-11 sm:py-12"
-                        initial={{ opacity: 0, y: 28 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.35 }}
-                        transition={{
-                          duration: 0.8,
-                          delay: Math.min(i * 0.05, 0.2),
-                          ease,
-                        }}
-                      >
-                        <div className="mb-4 flex items-baseline gap-4">
-                          <span className="font-display text-xl text-gold">
-                            {wish.index}
-                          </span>
-                          <span className="text-[0.62rem] font-medium uppercase tracking-[0.24em] text-ink-mute">
-                            {wish.label}
-                          </span>
-                        </div>
-                        <p className="max-w-2xl font-display text-[clamp(1.35rem,3.2vw,1.85rem)] leading-[1.35] tracking-[-0.01em] text-ink">
-                          {wish.body}
-                        </p>
-                      </motion.article>
-                    ))}
-                    <div className="border-t border-line" />
-                  </div>
-
-                  <div className="mt-12 flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => burst(220)}
-                      className="bg-deep px-9 py-4 text-[0.76rem] font-medium uppercase tracking-[0.18em] text-snow transition hover:-translate-y-0.5 hover:bg-[#2a2733]"
-                    >
-                      Celebrate
-                    </button>
-                  </div>
+          {step === "wishes" && (
+            <motion.section
+              key="wishes"
+              className="mx-auto w-full max-w-2xl"
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12, filter: "blur(6px)" }}
+              transition={{ duration: 0.55, ease }}
+            >
+              <div className="mb-10 text-center">
+                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.2em] text-ink-mute">
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+                  Logiqgen · Dev Team
                 </div>
-              </section>
+                <h2 className="font-display text-[clamp(2rem,5vw,3rem)] font-medium leading-[1.1] text-ink">
+                  Wishes from your dev team
+                </h2>
+                <p className="mt-3 text-sm font-light text-ink-soft">
+                  From the people you work with every day.
+                </p>
+              </div>
 
-              <section className="px-6 pb-24 pt-8 sm:px-10 lg:px-14">
-                <motion.div
-                  className="mx-auto max-w-2xl text-center"
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.4 }}
-                  transition={{ duration: 0.9, ease }}
+              <div className="space-y-4">
+                {wishes.map((wish, i) => (
+                  <motion.article
+                    key={wish.id}
+                    className={`flex gap-4 rounded-2xl border px-5 py-5 sm:gap-5 sm:px-6 sm:py-6 ${
+                      wish.featured
+                        ? "border-gold/35 bg-gold/10"
+                        : "border-line bg-card"
+                    }`}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.08 + i * 0.07, duration: 0.55, ease }}
+                  >
+                    <span className="font-display text-xl text-gold sm:text-2xl">
+                      {wish.index}
+                    </span>
+                    <div>
+                      <p className="mb-1.5 text-[0.62rem] font-medium uppercase tracking-[0.22em] text-ink-mute">
+                        {wish.label}
+                      </p>
+                      <p className="font-display text-[1.05rem] leading-relaxed text-ink sm:text-[1.15rem]">
+                        {wish.body}
+                      </p>
+                    </div>
+                  </motion.article>
+                ))}
+              </div>
+
+              <div className="mt-10 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    burst(160);
+                    go("finale");
+                  }}
+                  className="relative overflow-hidden rounded-full bg-gradient-to-r from-gold to-gold-bright px-9 py-3.5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-deep shadow-[0_10px_40px_rgba(232,196,122,0.25)] transition hover:-translate-y-0.5"
                 >
-                  <div
-                    className="mb-8 flex items-center justify-center gap-3 text-gold"
-                    aria-hidden
-                  >
-                    <span>✦</span>
-                    <span className="text-rose/70">✧</span>
-                    <span>✦</span>
-                  </div>
+                  <span className="relative z-10">Celebrate</span>
+                  <span className="btn-shine" aria-hidden />
+                </button>
+              </div>
+            </motion.section>
+          )}
 
-                  <p className="text-[0.66rem] font-medium uppercase tracking-[0.28em] text-ink-mute">
-                    With warm wishes
-                  </p>
+          {step === "finale" && (
+            <motion.section
+              key="finale"
+              className="relative mx-auto w-full max-w-xl text-center"
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.6, ease }}
+            >
+              <div
+                className="pointer-events-none absolute left-1/2 top-8 h-56 w-56 -translate-x-1/2 rounded-full blur-3xl"
+                style={{ background: "rgba(232,196,122,0.18)" }}
+                aria-hidden
+              />
 
-                  <h2 className="mt-5 font-display text-[clamp(2.4rem,6vw,3.8rem)] leading-[1.05] tracking-[-0.02em] text-ink">
-                    Happy Birthday,
-                    <br />
-                    <span className="italic text-rose">Kavya Reddy</span>
-                  </h2>
+              <div className="relative mx-auto mb-6 grid h-16 w-16 place-items-center rounded-full border border-gold/40 bg-card font-display text-lg tracking-wide text-gold">
+                LG
+              </div>
 
-                  <p className="mt-3 text-sm font-light text-ink-mute">
-                    A day to celebrate your light
-                  </p>
+              <p className="mb-4 text-gold" aria-hidden>
+                ✦ ✧ ✦
+              </p>
 
-                  <p className="mx-auto mt-8 max-w-md text-base font-light leading-relaxed text-ink-soft">
-                    Wishing you joy, success, good health, and a year filled
-                    with moments you will always remember.
-                    <br />
-                    Keep shining and keep smiling.
-                  </p>
+              <p className="text-[0.68rem] font-medium uppercase tracking-[0.28em] text-ink-mute">
+                With warm wishes
+              </p>
 
-                  <p className="mt-10 font-display text-xl text-ink">
-                    — Logiqgen team
-                  </p>
+              <h2 className="mt-4 font-display text-[clamp(2.4rem,7vw,3.8rem)] font-medium leading-[1.08] text-ink">
+                Happy Birthday,
+                <br />
+                <span className="italic text-gold">Kavya Reddy</span>
+              </h2>
 
-                  <button
-                    type="button"
-                    onClick={replay}
-                    className="mt-10 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-ink-mute transition hover:text-rose"
-                  >
-                    Replay the wish
-                  </button>
-                </motion.div>
-              </section>
-            </main>
+              <p className="mt-3 text-sm font-light text-rose">
+                A day to celebrate your light
+              </p>
 
-            <footer className="border-t border-line px-6 py-5 text-center text-[0.58rem] uppercase tracking-[0.2em] text-ink-mute">
-              Happy Birthday · Kavya Reddy · Logiqgen
-            </footer>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <p className="mx-auto mt-7 max-w-md text-base font-light leading-relaxed text-ink-soft">
+                Wishing you joy, success, good health, and a year filled with
+                moments you will always remember.
+              </p>
+              <p className="mt-3 text-base font-light text-ink-soft">
+                Keep shining and keep smiling.
+              </p>
+
+              <div className="mx-auto my-8 h-px w-20 bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+
+              <p className="font-display text-xl text-ink">— Logiqgen team</p>
+
+              <button
+                type="button"
+                onClick={() => go("intro")}
+                className="mt-10 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-ink-mute transition hover:text-gold"
+              >
+                Replay the wish
+              </button>
+            </motion.section>
+          )}
+        </AnimatePresence>
+      </main>
     </>
   );
 }

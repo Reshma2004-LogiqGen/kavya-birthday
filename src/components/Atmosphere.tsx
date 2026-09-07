@@ -2,76 +2,139 @@
 
 import { useEffect, useRef } from "react";
 
-type Bit = {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  vx: number;
-  vy: number;
-  rot: number;
-  vr: number;
+function Balloon({
+  className,
+  color,
+  delay,
+  size,
+}: {
+  className: string;
   color: string;
-};
-
-const COLORS = ["#c97b6f", "#b8955a", "#8fa3b5", "#14131a", "#fffcf8", "#d4b896"];
+  delay: string;
+  size: number;
+}) {
+  return (
+    <div
+      className={`absolute opacity-50 ${className}`}
+      style={{
+        width: size,
+        animation: `float-balloon ${8 + size / 30}s ease-in-out ${delay} infinite`,
+      }}
+    >
+      <div
+        style={{
+          width: size,
+          height: size * 1.22,
+          borderRadius: "50% 50% 48% 48%",
+          background: `radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35), ${color} 55%)`,
+        }}
+      />
+      <div
+        className="mx-auto"
+        style={{
+          width: 1,
+          height: 28,
+          background: "linear-gradient(180deg, rgba(250,246,239,0.3), transparent)",
+        }}
+      />
+    </div>
+  );
+}
 
 export function Atmosphere() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const starsRef = useRef<HTMLCanvasElement>(null);
+  const bokehRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const stars = starsRef.current;
+    const bokeh = bokehRef.current;
+    if (!stars || !bokeh) return;
+
+    const sCtx = stars.getContext("2d");
+    const bCtx = bokeh.getContext("2d");
+    if (!sCtx || !bCtx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let bits: Bit[] = [];
-    let raf = 0;
     let w = 0;
     let h = 0;
+    let raf = 0;
+    let t = 0;
 
-    const spawn = (anywhere = false): Bit => ({
-      x: Math.random() * w,
-      y: anywhere ? Math.random() * h : -20,
-      w: 3 + Math.random() * 6,
-      h: 4 + Math.random() * 8,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: 0.4 + Math.random() * 0.9,
-      rot: Math.random() * Math.PI,
-      vr: (Math.random() - 0.5) * 0.03,
-      color: COLORS[(Math.random() * COLORS.length) | 0],
-    });
+    const starPts = Array.from({ length: 120 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      r: 0.4 + Math.random() * 1.4,
+      a: 0.2 + Math.random() * 0.7,
+      s: 0.4 + Math.random() * 1.2,
+    }));
+
+    const orbs = Array.from({ length: 18 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      r: 20 + Math.random() * 60,
+      a: 0.04 + Math.random() * 0.08,
+      vx: (Math.random() - 0.5) * 0.00015,
+      vy: (Math.random() - 0.5) * 0.00012,
+      color:
+        Math.random() > 0.5
+          ? "232,196,122"
+          : Math.random() > 0.5
+            ? "232,164,184"
+            : "120,150,220",
+    }));
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = window.innerWidth;
       h = window.innerHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      bits = Array.from({ length: 36 }, () => spawn(true));
+      for (const c of [stars, bokeh]) {
+        c.width = w * dpr;
+        c.height = h * dpr;
+        c.style.width = `${w}px`;
+        c.style.height = `${h}px`;
+      }
+      sCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      bCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     const tick = () => {
-      ctx.clearRect(0, 0, w, h);
-      for (const b of bits) {
-        if (!reduced) {
-          b.x += b.vx + Math.sin(b.y * 0.012) * 0.15;
-          b.y += b.vy;
-          b.rot += b.vr;
-        }
-        if (b.y > h + 24) Object.assign(b, spawn(false));
-        ctx.save();
-        ctx.translate(b.x, b.y);
-        ctx.rotate(b.rot);
-        ctx.globalAlpha = 0.55;
-        ctx.fillStyle = b.color;
-        ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
-        ctx.restore();
+      t += 0.016;
+      sCtx.clearRect(0, 0, w, h);
+      bCtx.clearRect(0, 0, w, h);
+
+      for (const p of starPts) {
+        const twinkle = 0.45 + Math.sin(t * p.s + p.x * 10) * 0.45;
+        sCtx.beginPath();
+        sCtx.fillStyle = `rgba(250,246,239,${p.a * twinkle})`;
+        sCtx.arc(p.x * w, p.y * h, p.r, 0, Math.PI * 2);
+        sCtx.fill();
       }
+
+      for (const o of orbs) {
+        if (!reduced) {
+          o.x += o.vx;
+          o.y += o.vy;
+          if (o.x < -0.1) o.x = 1.1;
+          if (o.x > 1.1) o.x = -0.1;
+          if (o.y < -0.1) o.y = 1.1;
+          if (o.y > 1.1) o.y = -0.1;
+        }
+        const g = bCtx.createRadialGradient(
+          o.x * w,
+          o.y * h,
+          0,
+          o.x * w,
+          o.y * h,
+          o.r,
+        );
+        g.addColorStop(0, `rgba(${o.color},${o.a})`);
+        g.addColorStop(1, "transparent");
+        bCtx.fillStyle = g;
+        bCtx.beginPath();
+        bCtx.arc(o.x * w, o.y * h, o.r, 0, Math.PI * 2);
+        bCtx.fill();
+      }
+
       raf = requestAnimationFrame(tick);
     };
 
@@ -84,71 +147,51 @@ export function Atmosphere() {
     };
   }, []);
 
-  const sparks = Array.from({ length: 16 }, (_, i) => ({
-    top: `${8 + ((i * 17) % 80)}%`,
-    left: `${6 + ((i * 23) % 88)}%`,
-    delay: `${(i % 6) * 0.35}s`,
-    size: 2 + (i % 3),
-  }));
-
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
       <div
         className="absolute inset-0"
         style={{
           background: `
-            radial-gradient(ellipse 90% 65% at 10% -5%, rgba(201,123,111,0.28), transparent 55%),
-            radial-gradient(ellipse 80% 55% at 95% 5%, rgba(184,149,90,0.26), transparent 50%),
-            radial-gradient(ellipse 70% 50% at 50% 100%, rgba(143,163,181,0.18), transparent 55%),
-            linear-gradient(165deg, #fffcf8 0%, #f7f4f0 45%, #efe8e1 100%)
+            radial-gradient(ellipse 90% 55% at 50% -5%, rgba(232,196,122,0.14), transparent 58%),
+            radial-gradient(ellipse 55% 45% at 85% 75%, rgba(232,164,184,0.12), transparent 52%),
+            radial-gradient(ellipse 45% 35% at 10% 60%, rgba(120,150,220,0.1), transparent 50%),
+            linear-gradient(168deg, #04060f 0%, #0a1020 42%, #120e1a 100%)
           `,
         }}
       />
-
+      <canvas ref={starsRef} className="absolute inset-0" />
+      <canvas ref={bokehRef} className="absolute inset-0" />
       <div
-        className="absolute -left-[8%] top-[8%] h-[420px] w-[420px] rounded-full blur-[90px]"
+        className="absolute inset-0"
         style={{
-          background: "rgba(201,123,111,0.28)",
-          animation: "float-orb 16s ease-in-out infinite alternate",
+          background: `
+            radial-gradient(ellipse 50% 30% at 20% 20%, rgba(120,180,255,0.06), transparent 60%),
+            radial-gradient(ellipse 40% 25% at 75% 30%, rgba(232,196,122,0.07), transparent 55%),
+            radial-gradient(ellipse 35% 20% at 50% 70%, rgba(232,164,184,0.06), transparent 50%)
+          `,
+          animation: "aurora-shift 18s ease-in-out infinite alternate",
         }}
       />
       <div
-        className="absolute -right-[6%] top-[0%] h-[480px] w-[480px] rounded-full blur-[100px]"
-        style={{
-          background: "rgba(184,149,90,0.22)",
-          animation: "float-orb 20s ease-in-out infinite alternate-reverse",
-        }}
+        className="absolute left-[6%] top-[10%] h-[320px] w-[320px] rounded-full opacity-50 blur-[70px]"
+        style={{ background: "rgba(232,196,122,0.2)", animation: "drift 16s ease-in-out infinite" }}
       />
       <div
-        className="absolute bottom-[-10%] left-[30%] h-[380px] w-[380px] rounded-full blur-[90px]"
+        className="absolute bottom-[15%] right-[4%] h-[360px] w-[360px] rounded-full opacity-50 blur-[70px]"
         style={{
-          background: "rgba(143,163,181,0.2)",
-          animation: "float-orb 18s ease-in-out infinite alternate",
+          background: "rgba(232,164,184,0.16)",
+          animation: "drift 16s ease-in-out -5s infinite",
         }}
       />
-
-      {sparks.map((s, i) => (
-        <span
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            top: s.top,
-            left: s.left,
-            width: s.size,
-            height: s.size,
-            background: i % 2 === 0 ? "#c97b6f" : "#b8955a",
-            boxShadow: `0 0 ${s.size * 4}px ${s.size}px rgba(201,123,111,0.35)`,
-            animation: `twinkle ${2.4 + (i % 4) * 0.4}s ease-in-out ${s.delay} infinite`,
-          }}
-        />
-      ))}
-
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-80" />
-
+      <Balloon className="left-[8%] top-[18%]" color="#e8c47a" delay="0s" size={52} />
+      <Balloon className="right-[10%] top-[12%]" color="#e8a4b8" delay="-2.5s" size={44} />
+      <Balloon className="bottom-[22%] left-[4%]" color="#9bb7e8" delay="-4.5s" size={38} />
+      <Balloon className="bottom-[28%] right-[6%]" color="#f3d9a4" delay="-1.5s" size={46} />
       <div
         className="absolute inset-0 opacity-[0.035]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
         }}
       />
     </div>

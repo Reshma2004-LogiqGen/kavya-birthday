@@ -1,23 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: var(--font-instrument), ui-serif, Georgia, serif;
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
 
-  --color-ink: #14131a;
-  --color-ink-soft: rgba(20, 19, 26, 0.68);
-  --color-ink-mute: rgba(20, 19, 26, 0.42);
-  --color-paper: #f7f4f0;
-  --color-snow: #fffcf8;
-  --color-deep: #14131a;
-  --color-rose: #c97b6f;
-  --color-gold: #b8955a;
-  --color-mist: #e8e2da;
-  --color-line: rgba(20, 19, 26, 0.1);
+  --color-ink: #faf6ef;
+  --color-ink-soft: rgba(250, 246, 239, 0.74);
+  --color-ink-mute: rgba(250, 246, 239, 0.48);
+  --color-paper: #04060f;
+  --color-snow: #faf6ef;
+  --color-deep: #04060f;
+  --color-gold: #e8c47a;
+  --color-gold-bright: #f5d98a;
+  --color-rose: #e8a4b8;
+  --color-line: rgba(232, 196, 122, 0.24);
+  --color-card: rgba(12, 18, 36, 0.62);
 }
 
-html {
-  scroll-behavior: smooth;
+html,
+body {
+  margin: 0;
+  min-height: 100%;
 }
 
 body {
@@ -25,33 +28,112 @@ body {
   color: var(--color-ink);
   background: var(--color-paper);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(201, 123, 111, 0.25);
+  background: rgba(232, 196, 122, 0.3);
+  color: #faf6ef;
 }
 
 .font-display {
   font-family: var(--font-display);
 }
 
-@keyframes float-orb {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
+@keyframes aurora-shift {
+  0% {
+    opacity: 0.7;
+    transform: scale(1) translateY(0);
   }
-  to {
-    transform: translate3d(20px, -28px, 0) scale(1.06);
+  100% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-12px);
   }
 }
 
-@keyframes twinkle {
+@keyframes drift {
   0%,
   100% {
-    opacity: 0.2;
-    transform: scale(0.7);
+    transform: translate(0, 0) scale(1);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.2);
+    transform: translate(20px, -24px) scale(1.06);
   }
+}
+
+@keyframes float-balloon {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(2deg);
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(-2deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.15) rotate(2deg);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #faf6ef 0%,
+    #e8c47a 35%,
+    #faf6ef 50%,
+    #e8a4b8 75%,
+    #faf6ef 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+.btn-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+
+button:hover .btn-shine,
+a:hover .btn-shine {
+  transform: translateX(120%);
 }
