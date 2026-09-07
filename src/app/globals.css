@@ -4,16 +4,18 @@
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
   --font-sans: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink: #10151c;
-  --color-ink-soft: rgba(16, 21, 28, 0.68);
-  --color-ink-mute: rgba(16, 21, 28, 0.42);
-  --color-paper: #eef3f6;
-  --color-snow: #f8fbfc;
-  --color-deep: #10151c;
-  --color-teal: #3d7a78;
-  --color-amber: #c9894a;
-  --color-mist: #d5e0e6;
-  --color-line: rgba(16, 21, 28, 0.1);
+  --color-ink: #fff7f2;
+  --color-ink-soft: rgba(255, 247, 242, 0.76);
+  --color-ink-mute: rgba(255, 247, 242, 0.48);
+  --color-paper: #1a0f18;
+  --color-snow: #fff7f2;
+  --color-deep: #140c12;
+  --color-teal: #ff8fab;
+  --color-amber: #ffd37a;
+  --color-coral: #ff6b6b;
+  --color-sky: #7ec8ff;
+  --color-mist: #3a2434;
+  --color-line: rgba(255, 247, 242, 0.14);
 }
 
 html {
@@ -28,7 +30,8 @@ body {
 }
 
 ::selection {
-  background: rgba(61, 122, 120, 0.22);
+  background: rgba(255, 211, 122, 0.35);
+  color: #1a0f18;
 }
 
 .font-display {
@@ -40,7 +43,7 @@ body {
     transform: translate(0, 0) scale(1);
   }
   to {
-    transform: translate(40px, -30px) scale(1.08);
+    transform: translate(36px, -28px) scale(1.08);
   }
 }
 
@@ -49,7 +52,53 @@ body {
     transform: translate(0, 0) scale(1);
   }
   to {
-    transform: translate(-30px, 25px) scale(1.06);
+    transform: translate(-28px, 22px) scale(1.06);
+  }
+}
+
+@keyframes float-balloon {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(3deg);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes fall {
+  from {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  to {
+    transform: translate3d(30px, 110vh, 0) rotate(520deg);
+    opacity: 0;
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.9;
   }
 }
 
@@ -59,16 +108,5 @@ body {
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes rise-soft {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }

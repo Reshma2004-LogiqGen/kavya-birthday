@@ -53,7 +53,7 @@ export function BirthdayExperience() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease }}
           >
-            <span className="font-display text-2xl tracking-wide text-teal">KR</span>
+            <span className="font-display text-2xl tracking-wide text-amber">KR</span>
           </motion.div>
 
           <motion.p
@@ -73,7 +73,7 @@ export function BirthdayExperience() {
           >
             Today we celebrate
             <br />
-            <span className="italic text-teal">quiet brilliance</span>
+            <span className="italic text-amber">Kavya Reddy</span>
           </motion.h1>
 
           <motion.p
@@ -89,12 +89,12 @@ export function BirthdayExperience() {
           <motion.button
             type="button"
             onClick={begin}
-            className="mt-10 bg-deep px-10 py-4 text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-snow transition hover:-translate-y-0.5 hover:bg-teal"
+            className="mt-10 bg-amber px-10 py-4 text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-deep transition hover:-translate-y-0.5 hover:bg-[#ffe09a]"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.48, duration: 0.7 }}
           >
-            Begin
+            Begin the celebration
           </motion.button>
         </section>
       </>
@@ -142,10 +142,10 @@ export function BirthdayExperience() {
                   humans at Logiqgen — this day is entirely yours.
                 </p>
                 <a
-                  href="#chapters"
-                  className="inline-flex border border-line px-7 py-3.5 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-ink transition hover:border-teal hover:text-teal"
+                  href="#wishes"
+                  className="inline-flex border border-line px-7 py-3.5 text-[0.74rem] font-semibold uppercase tracking-[0.16em] text-ink transition hover:border-amber hover:text-amber"
                 >
-                  Read dedication
+                  See wishes
                 </a>
               </div>
             </div>
@@ -160,20 +160,20 @@ export function BirthdayExperience() {
               className="absolute inset-0 rounded-full border border-line"
               style={{ animation: "orbit 48s linear infinite" }}
             />
-            <div className="absolute inset-[12%] rounded-full border border-teal/20" />
-            <div className="absolute inset-[28%] rounded-full border border-amber/25" />
+            <div className="absolute inset-[12%] rounded-full border border-teal/25" />
+            <div className="absolute inset-[28%] rounded-full border border-amber/30" />
             <div
               className="absolute inset-[38%] rounded-full"
               style={{
                 background:
-                  "radial-gradient(circle at 40% 35%, rgba(255,255,255,0.7), transparent 45%), radial-gradient(circle at 60% 65%, rgba(61,122,120,0.35), rgba(201,137,74,0.2) 70%, transparent)",
+                  "radial-gradient(circle at 40% 35%, rgba(255,247,242,0.35), transparent 45%), radial-gradient(circle at 60% 65%, rgba(255,143,171,0.4), rgba(255,211,122,0.25) 70%, transparent)",
               }}
             />
           </div>
         </section>
 
         {/* Living traits */}
-        <section className="border-y border-line bg-snow/50 px-6 py-16 sm:px-10 lg:px-14">
+        <section className="border-y border-line bg-deep/40 px-6 py-16 sm:px-10 lg:px-14">
           <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
               <p className="mb-3 text-[0.66rem] font-medium uppercase tracking-[0.28em] text-ink-mute">
@@ -194,13 +194,13 @@ export function BirthdayExperience() {
                   onClick={() => setActiveTrait(i)}
                   className={`w-full border-l-2 px-5 py-4 text-left transition ${
                     activeTrait === i
-                      ? "border-teal bg-teal/5"
-                      : "border-transparent hover:border-mist hover:bg-snow"
+                      ? "border-amber bg-amber/10"
+                      : "border-transparent hover:border-line hover:bg-white/5"
                   }`}
                 >
                   <p
                     className={`text-[0.62rem] font-semibold uppercase tracking-[0.22em] ${
-                      activeTrait === i ? "text-teal" : "text-ink-mute"
+                      activeTrait === i ? "text-amber" : "text-ink-mute"
                     }`}
                   >
                     {trait.label}
@@ -214,8 +214,8 @@ export function BirthdayExperience() {
           </div>
         </section>
 
-        {/* Dedication chapters */}
-        <section id="chapters" className="px-6 py-24 sm:px-10 sm:py-32 lg:px-14">
+        {/* Birthday wishes */}
+        <section id="wishes" className="px-6 py-24 sm:px-10 sm:py-32 lg:px-14">
           <div className="mx-auto max-w-4xl">
             <motion.div
               className="mb-16 max-w-xl"
@@ -225,27 +225,33 @@ export function BirthdayExperience() {
               transition={{ duration: 0.8, ease }}
             >
               <p className="mb-3 text-[0.66rem] font-medium uppercase tracking-[0.28em] text-amber">
-                Dedication
+                Birthday wishes
               </p>
               <h2 className="font-display text-[clamp(2.4rem,6vw,3.8rem)] font-medium leading-[1] tracking-[-0.025em] text-ink">
-                Five chapters
+                Wishes
                 <span className="italic text-teal"> for you</span>
               </h2>
+              <p className="mt-4 text-base text-ink-soft">
+                From your Logiqgen Dev Team — with love.
+              </p>
             </motion.div>
 
             <div className="space-y-0">
               {wishes.map((wish, i) => (
                 <motion.article
                   key={wish.id}
-                  className="grid gap-4 border-t border-line py-12 sm:grid-cols-[140px_1fr] sm:gap-10 sm:py-14"
+                  className="grid gap-4 border-t border-line py-12 sm:grid-cols-[120px_1fr] sm:gap-10 sm:py-14"
                   initial={{ opacity: 0, y: 36 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.85, delay: Math.min(i * 0.04, 0.16), ease }}
                 >
-                  <p className="text-[0.68rem] font-medium uppercase tracking-[0.2em] text-ink-mute">
-                    {wish.chapter}
-                  </p>
+                  <div>
+                    <p className="font-display text-2xl text-amber">{wish.index}</p>
+                    <p className="mt-2 text-[0.62rem] font-medium uppercase tracking-[0.2em] text-ink-mute">
+                      {wish.label}
+                    </p>
+                  </div>
                   <div>
                     <h3 className="font-display text-[clamp(1.6rem,3.5vw,2.3rem)] font-medium leading-[1.15] tracking-[-0.02em] text-ink">
                       {wish.title}
@@ -267,7 +273,7 @@ export function BirthdayExperience() {
             className="pointer-events-none absolute inset-x-0 top-0 h-full"
             style={{
               background:
-                "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(61,122,120,0.12), transparent 70%)",
+                "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,211,122,0.14), transparent 70%)",
             }}
             aria-hidden
           />
@@ -299,7 +305,7 @@ export function BirthdayExperience() {
             <button
               type="button"
               onClick={() => burst(220)}
-              className="mt-10 bg-teal px-9 py-3.5 text-[0.76rem] font-semibold uppercase tracking-[0.16em] text-snow transition hover:-translate-y-0.5 hover:bg-[#326663]"
+              className="mt-10 bg-amber px-9 py-3.5 text-[0.76rem] font-semibold uppercase tracking-[0.16em] text-deep transition hover:-translate-y-0.5 hover:bg-[#ffe09a]"
             >
               Send celebration
             </button>

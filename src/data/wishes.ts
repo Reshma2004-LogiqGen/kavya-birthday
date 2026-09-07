@@ -1,6 +1,7 @@
 export type Wish = {
   id: string;
-  chapter: string;
+  index: string;
+  label: string;
   title: string;
   body: string;
 };
@@ -15,32 +16,37 @@ export const traits = [
 export const wishes: Wish[] = [
   {
     id: "01",
-    chapter: "Chapter I",
-    title: "The teammate we trust",
-    body: "Kavya Reddy, you turn a group of people into a team. In every standup and late fix, you bring calm that others borrow — and the work becomes lighter because you are in it.",
+    index: "01",
+    label: "Wish one",
+    title: "Happy Birthday, Kavya Reddy",
+    body: "You're the colleague everyone hopes is on their sprint — reliable, sharp, and genuinely great to work with. Today we celebrate you.",
   },
   {
     id: "02",
-    chapter: "Chapter II",
-    title: "Craft without noise",
-    body: "You write and think with honesty. No shortcuts for show. No ego in the review. Just clean work that holds — the rare kind of excellence that never needs a spotlight.",
+    index: "02",
+    label: "Wish two",
+    title: "To our favorite teammate",
+    body: "Standups, code reviews, debugging at odd hours — you bring calm and clarity when things get messy. That kind of teammate is rare.",
   },
   {
     id: "03",
-    chapter: "Chapter III",
-    title: "The gift of noticing",
-    body: "While the world rushes, you observe. The detail in a design. The pause in a meeting. The bug hiding in plain sight. Your eyes make Logiqgen sharper every day.",
+    index: "03",
+    label: "Wish three",
+    title: "For the keenest observer",
+    body: "You notice what others rush past — the detail in a design, the pause in a meeting, the bug in plain sight. Your eyes make this team sharper.",
   },
   {
     id: "04",
-    chapter: "Chapter IV",
-    title: "A year worthy of you",
-    body: "May this year give you soft mornings, bright wins, and rest that actually restores you. Ship what you dream of — and leave room for joy that has nothing to do with tickets.",
+    index: "04",
+    label: "Wish four",
+    title: "May this year be kind",
+    body: "Clean wins, steady growth, and days off that actually feel like days off. You've earned all of it — go after everything you're working toward.",
   },
   {
     id: "05",
-    chapter: "Chapter V",
-    title: "From all of us",
-    body: "Talent can be trained. A beautiful heart cannot. Thank you for being both brilliant and kind. We are lucky to build beside you. Happy Birthday, Kavya Reddy.",
+    index: "05",
+    label: "Wish five",
+    title: "From your Logiqgen family",
+    body: "You're one of the easiest people to work with and one of the hardest to replace. Thank you for being brilliant and kind. Keep shining, Kavya.",
   },
 ];
