@@ -16,9 +16,9 @@ const sans = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Happy Birthday, Kavya Reddy",
+  title: "Happy Birthday, Kavya Reddy | Logiqgen Dev Team",
   description:
-    "Premium birthday wishes for Kavya Reddy — teammate, developer, observer, and one of the best humans we know.",
+    "Birthday wishes for Kavya Reddy from the Logiqgen Dev Team — teammate, developer, observer, and one of the best humans we know.",
 };
 
 export default function RootLayout({

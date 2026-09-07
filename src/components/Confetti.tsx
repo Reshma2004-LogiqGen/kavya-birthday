@@ -16,7 +16,7 @@ type Particle = {
   vr: number;
 };
 
-const COLORS = ["#e08a7a", "#d4b56a", "#9eb6c8", "#fff8f3", "#f3d9c8", "#7fa090"];
+const COLORS = ["#c97b6f", "#b8955a", "#8fa3b5", "#14131a", "#fffcf8", "#d4b896"];
 
 export function useConfetti() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
